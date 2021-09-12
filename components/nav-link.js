@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default ({ href, selected, children }) => (
   <React.Fragment>
-    <Link href={href}>
+    <Link prefetch href={href}>
       <a className={selected === children ? "selected" : undefined}>
         {children}
       </a>

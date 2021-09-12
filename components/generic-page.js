@@ -1,10 +1,13 @@
 import React from "react";
 import NavLink from "./nav-link";
 import Head from "next/head";
+import ErrorBoundary from "./error-boundary";
 
 export default ({ children, activePage }) => (
   <div>
     <Head>
+      <title>Lona Faye Feldman - {activePage}</title>
+      <link rel="icon" type="image/x-icon" href="/static/favicon.ico" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
     <header>
@@ -21,7 +24,11 @@ export default ({ children, activePage }) => (
         </NavLink>
       </nav>
     </header>
-    <main>{children}</main>
+    <main>
+      <ErrorBoundary message="Error displaying page">
+        {children}
+      </ErrorBoundary>
+    </main>
     <style jsx>{`
       header {
         display: flex;

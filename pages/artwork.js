@@ -1,7 +1,12 @@
 import React from "react";
 import GenericPage from "../components/generic-page";
+import ImageCaption from "../components/image-caption";
 import Image from "../components/image";
 import InstaFeed from "instafeed.js";
+import getConfig from "next/config";
+import ErrorBoundary from "../components/error-boundary";
+
+const { publicRuntimeConfig } = getConfig();
 
 export default class ImageFeed extends React.Component {
   constructor(props) {
@@ -13,8 +18,8 @@ export default class ImageFeed extends React.Component {
   componentDidMount() {
     const feed = new InstaFeed({
       get: "user",
-      userId: "9949315571",
-      accessToken: "9949315571.730872e.6d923bf2859f414e8d032147c275510a",
+      userId: publicRuntimeConfig.instagramId,
+      accessToken: publicRuntimeConfig.instagramToken,
       resoultion: "standard_resolution",
       mock: true,
       success: res => this.setState({ status: "success", data: res.data }),
@@ -35,11 +40,10 @@ export default class ImageFeed extends React.Component {
       return <p>Error displaying images.</p>;
     }
 
-    // const mid = Math.ceil(data.length / 2);
-    // const imagesLeft = data.slice(0, mid);
-    // const imagesRight = data.slice(mid, data.length);
     const imagesJsx = data.map((img, idx) => (
-      <Image key={idx} src={img.images.standard_resolution.url} />
+      <ErrorBoundary message="Error displaying image">
+        <ImageCaption key={idx} data={img} />
+      </ErrorBoundary>
     ));
     const [imagesLeftJsx, imagesRightJsx] = split(imagesJsx);
 
@@ -56,6 +60,8 @@ export default class ImageFeed extends React.Component {
           .container {
             box-sizing: border-box;
             width: calc(50% - 10px);
+            display: flex;
+            flex-direction: column;
           }
 
           .left {
